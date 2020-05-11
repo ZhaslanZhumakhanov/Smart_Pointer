@@ -9,7 +9,7 @@ private:
 public:
     typedef T element_type; // просто оставьте это здесь.
 
-    explicit scoped_ptr(T *ptr) : ptr_(ptr){
+    explicit scoped_ptr(T *ptr = nullptr) : ptr_(ptr){
         std::cout << "SmartPointer is created and wraps a ptr" << std::endl;
     } // явный конструктор для оборачивания указателя
 
@@ -24,9 +24,9 @@ public:
 
     T* get() const { return ptr_; } // метод get чтобы взять указатель
 
-    T operator ->() const { return ptr_; } // оператор -> чтобы взять указатель.
+    T* operator ->() const { return ptr_; } // оператор -> чтобы взять указатель.
 
-    T* operator *() const { return *ptr_; } // оператор * разыменования указателя и получения ссылки на объект T
+    T& operator *() const { return *ptr_; } // оператор * разыменования указателя и получения ссылки на объект T
 
     void reset(T* ptr = nullptr) {
         delete ptr_;

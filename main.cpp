@@ -1,7 +1,7 @@
 #include <iostream>
+#include "scoped_ptr.hpp"
 #include <cassert>
 #include <string>
-#include "scoped_ptr.h"
 
 using namespace std;
 
@@ -14,10 +14,10 @@ void bar() {
     scoped_ptr<foo> foo_ptr(new foo {0, 111});
     cout << (*foo_ptr).field1 << " " << foo_ptr->field2 << " " << foo_ptr.get() << endl;
 
-    if (foo_ptr) foo_ptr->field1 += 1;
+    if (foo_ptr) foo_ptr->field2 -= 11;
 
     cout << foo_ptr.get() << endl;
-    cout << foo_ptr->field1 << endl;
+    cout << foo_ptr->field2 << endl;
 
 }
 
