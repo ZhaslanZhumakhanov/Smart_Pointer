@@ -6,13 +6,18 @@
 #include "shared_ptr.hpp"
 
 static void test_shared_ptr() {
-    static_assert(true,
-                  "shared ptr should not have implicit constructor from pointer!");
+    static_assert(
+            !std::is_convertible<int *, shared_ptr<int>>::value,
+            "shared ptr should not have implicit constructor from pointer!");
 
-    static_assert(std::is_same<shared_ptr<int>::element_type, int>::value, "shared ptr should contain element_type");
+    static_assert(std::is_same<shared_ptr<int>::element_type, int>::value,
+                  "shared ptr should contain element_type");
 
-    static_assert(std::is_constructible<bool, shared_ptr<int>>::value != 0,  // implicit conversion
-                  "shared ptr should convertible to the bool, but not implicitly");
+    static_assert(
+            std::is_constructible<bool, shared_ptr<int>>::value // explicit conversion
+            && !std::is_convertible<shared_ptr<int>,
+                    bool>::value, // implicit conversion
+            "shared ptr should convertible to the bool, but not implicitly");
 
     {
         shared_ptr<int> empty_ptr;
@@ -20,7 +25,7 @@ static void test_shared_ptr() {
         assert(!empty_ptr);
         assert(empty_ptr.get() == nullptr);
     }
-
+    std::cout << "----------------------------------------------" << std::endl;
     {
         struct entity {
             int f1;
@@ -41,7 +46,7 @@ static void test_shared_ptr() {
         assert(ptr.get()->f1 == 10);
         assert(ptr.get()->f2 == "hello");
     }
-
+    std::cout << "----------------------------------------------" << std::endl;
     {
         shared_ptr<int> ptr{new int{10}};
         assert(*ptr == 10);
@@ -54,14 +59,14 @@ static void test_shared_ptr() {
         ptr.reset(new int{20});
         assert(*ptr == 20);
     }
-
+    std::cout << "----------------------------------------------" << std::endl;
     {
         shared_ptr<int> ptr{new int{10}};
 
         ptr = static_cast<shared_ptr<int> const &>(ptr);
 
         {
-            const shared_ptr<int>& other{ptr};
+            shared_ptr<int> other{ptr};
 
             assert(other.get() == ptr.get());
             assert(&(*other) == &(*ptr));
@@ -76,7 +81,7 @@ static void test_shared_ptr() {
             assert(&(*other) == &(*ptr));
         }
     }
-
+    std::cout << "----------------------------------------------" << std::endl;
     {
         shared_ptr<int> first{new int{10}};
         shared_ptr<int> second{first};
@@ -93,23 +98,21 @@ static void test_shared_ptr() {
         second = first;
         assert(first.get() == second.get());
     }
-
+    std::cout << "----------------------------------------------" << std::endl;
     {
+        int trigger = 42;
         struct A {
             int *a_;
             explicit A(int *a) : a_(a) {}
-            virtual ~A() {
-                *a_ = 0;
-            }
+            ~A() { *a_ = 0; }
         };
 
-        int trigger = 42;
         {
             shared_ptr<A> first{new A{&trigger}};
-            const auto& second = first;
-            const auto& third = second;
-            const auto& fourth = third;
-            const auto fifth = second;
+            auto second = first;
+            auto third = second;
+            auto fourth = third;
+            auto fifth = second;
 
             assert(first.get() == first.get());
             assert(*first->a_ == 42);

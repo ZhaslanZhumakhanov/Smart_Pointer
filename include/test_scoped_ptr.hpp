@@ -34,7 +34,7 @@ static void test_scoped_ptr() {
         assert(!empty_ptr);
         assert(empty_ptr.get() == nullptr);
     }
-
+    std::cout << "----------------------------------------------" << std::endl;
     {
         struct entity {
             int f1;
@@ -55,7 +55,7 @@ static void test_scoped_ptr() {
         assert(ptr.get()->f1 == 10);
         assert(ptr.get()->f2 == "hello");
     }
-
+    std::cout << "----------------------------------------------" << std::endl;
     {
         scoped_ptr<int> ptr{new int{10}};
         assert(*ptr == 10);
@@ -68,7 +68,7 @@ static void test_scoped_ptr() {
         ptr.reset(new int{20});
         assert(*ptr == 20);
     }
-
+    std::cout << "----------------------------------------------" << std::endl;
     {
         int *i = new int{10};
         scoped_ptr<int> ptr{i};
@@ -77,4 +77,5 @@ static void test_scoped_ptr() {
 
         delete i;
     }
+    std::cout << "----------------------------------------------" << std::endl;
 }
