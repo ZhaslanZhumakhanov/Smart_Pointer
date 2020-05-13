@@ -40,6 +40,6 @@ public:
     }// метод release чтобы отдать сырой указатель, НО НЕ УДАЛЯТЬ его
 
     // это оператор, чтобы можно было писать if (sptr) { ... }.
-    explicit operator bool() const{ return ptr_ != nullptr; }
+    explicit operator bool() const { return ptr_ != nullptr; }
 };
 
