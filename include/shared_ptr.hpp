@@ -20,7 +20,7 @@ public:
     shared_ptr& operator=(const shared_ptr& shared_ptr) {
         if (this != &shared_ptr) {
             if (count_ != nullptr) {
-                *count_--;
+                (*count_)--;
             }
             ptr_ = shared_ptr.ptr_;
             count_ = shared_ptr.count_;
